@@ -94,7 +94,7 @@ const figures = () => `
 const clients = (bg = '') => `
 <section class="${bg}"><div class="wrap">
   <div class="head"><span class="eyebrow">Clientes</span><h2>Quién confía en nosotros</h2><p class="lead">Algunos de nuestros principales clientes y colaboradores.</p></div>
-  <div class="logos">${CLIENTS.map((c, i) => `<div><img src="${IMG}cliente-${i + 1}.jpg" alt="${c}" loading="lazy"></div>`).join('')}</div>
+  <div class="logos">${CLIENTS.map((c, i) => `<div><img src="${IMG}logo-cliente-${i + 1}.jpg" alt="${c}" width="203" height="118" loading="lazy"></div>`).join('')}</div>
 </div></section>`;
 
 const newsCards = (n) => NEWS.slice(0, n).map(x => `<a class="card" href="https://grupmet.com/${x[2]}/" target="_blank" rel="noopener">${photo(x[0], '', 'thumb wide')}<div class="body"><h3>${x[1]}</h3><span class="link">Leer más</span></div></a>`).join('');

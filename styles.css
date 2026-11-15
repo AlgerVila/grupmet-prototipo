@@ -282,3 +282,10 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--red);outline-off
   .form{padding:22px}
   .footer-grid{grid-template-columns:1fr}
 }
+
+/* Logos de clientes: fila limpia, sin cajas, fondo fundido */
+.logos{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px 32px;margin-bottom:0}
+.logos div{border:0;background:none;height:auto;padding:0;display:block}
+.logos img{display:block;height:88px;width:auto;max-width:none;max-height:none;mix-blend-mode:multiply;filter:grayscale(1);opacity:.8;transition:filter .2s,opacity .2s}
+.logos div:hover img{filter:none;opacity:1}
+@media (max-width:900px){.logos{justify-content:center;gap:12px 28px}.logos img{height:70px}}
