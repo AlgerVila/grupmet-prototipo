@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=7">
+<link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
 
@@ -31,11 +31,12 @@
   <div class="wrap header-in">
     <a class="logo" href="#/"><img src="assets/logo-grupmet-negativo.png" alt="GRUP MET – Logistics Solutions, inicio" width="196" height="44"></a>
     <a href="#/cotizar" class="btn btn-red head-cta">Cotizar</a>
-    <button class="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+    <button class="burger" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
     <nav class="nav" id="nav" aria-label="Principal">
       <div class="nav-item has-sub">
-        <a class="nav-link" href="#/sectores" data-nav="sectores sector">Sectores <span class="caret" aria-hidden="true"></span></a>
-        <div class="sub">
+        <a class="nav-link" href="#/sectores" data-nav="sectores sector">Sectores</a>
+        <button class="sub-toggle" type="button" aria-expanded="false" aria-controls="sub-sectores" aria-label="Submenú de Sectores"><span class="caret" aria-hidden="true"></span></button>
+        <div class="sub" id="sub-sectores">
           <a href="#/sector/farma">Farma y salud</a>
           <a href="#/sector/moda">Moda y textil</a>
           <a href="#/sector/editorial">Editorial</a>
@@ -84,8 +85,8 @@
   <div class="wrap legal">© GRUP MET · Aviso legal · Privacidad · Cookies</div>
 </footer>
 
-<script src="map-data.js?v=7"></script>
-<script src="fx.js?v=7"></script>
-<script src="app.js?v=7"></script>
+<script defer src="map-data.js?v=8"></script>
+<script defer src="fx.js?v=8"></script>
+<script defer src="app.js?v=8"></script>
 </body>
 </html>

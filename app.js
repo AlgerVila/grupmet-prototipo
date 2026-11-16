@@ -54,7 +54,18 @@ const WAREHOUSES = [
   ['moda-sede-4.jpg', 'Almacén 4', 'Avda. Siglo XXI 66-68 – Viladecans (Barcelona)'],
 ];
 
-const photo = (file, alt, cls = '') => `<img class="photo ${cls}" src="${IMG}${file}" alt="${alt}" loading="lazy">`;
+// Dimensiones intrínsecas: reservan espacio antes de cargar la imagen (evita saltos de layout).
+const DIM = {"banner-blog.jpg":[1920,635],"banner-contacto.jpg":[1920,637],"banner-editorial.jpg":[1920,844],"banner-moda.jpg":[1920,844],"banner-nosotros.jpg":[1920,637],"banner-servicios.jpg":[1920,637],"connect.jpg":[1200,529],"editorial1.jpg":[570,380],"editorial2.jpg":[571,381],"farma-02.jpg":[1024,683],"farma-05.jpg":[1024,683],"farma-10.jpg":[1024,683],"farma-14.jpg":[1024,683],"farma-20.jpg":[1024,683],"farma-26.jpg":[1024,683],"farma-30.jpg":[1024,683],"farma-33.jpg":[1024,683],"farma-36.jpg":[1024,683],"farma-38.jpg":[1024,683],"farma-producto-1.jpg":[178,268],"farma-producto-2.jpg":[178,268],"farma-producto-3.jpg":[178,268],"farma-producto-4.jpg":[178,268],"home-editorial.jpg":[944,596],"home-farma.jpg":[944,596],"home-nosotros.jpg":[944,596],"logo-cliente-1.jpg":[203,118],"logo-cliente-2.jpg":[203,118],"logo-cliente-3.jpg":[203,118],"logo-cliente-4.jpg":[203,118],"logo-cliente-5.jpg":[203,118],"logo-vertical.jpg":[352,352],"moda-brazo.jpg":[944,479],"moda-ciclo.jpg":[1213,570],"moda-recursos.jpg":[566,302],"moda-sede-1.jpg":[568,356],"moda-sede-2.jpg":[568,356],"moda-sede-3.jpg":[567,356],"moda-sede-4.jpg":[570,358],"news-1.jpg":[768,432],"news-2.jpg":[768,432],"news-3.jpg":[768,432],"news-4.jpg":[768,512],"news-5.jpg":[768,512],"news-6.jpg":[768,512],"ico-1.png":[90,90],"ico-2.png":[90,90],"ico-3.png":[90,90],"ico-4.png":[90,90],"ico-5.png":[90,90],"ico-6.png":[90,90],"ico-7.png":[90,90],"ico-8.png":[90,90]};
+const dim = (file) => DIM[file] ? ` width="${DIM[file][0]}" height="${DIM[file][1]}"` : '';
+const photo = (file, alt, cls = '') => `<img class="photo ${cls}" src="${IMG}${file}" alt="${alt}"${dim(file)} loading="lazy">`;
+
+// Migas: lista ordenada dentro de <nav>; el separador lo pone el CSS.
+const crumbs = (c) => {
+  if (!c) return '';
+  const parts = c.split(' / '), last = parts.pop();
+  const here = (location.hash || '#/').replace(/["'<>&\s]/g, '');
+  return `<nav class="crumb" aria-label="Migas de pan"><ol><li><a href="#/">Inicio</a></li>${parts.map(p => `<li>${p}</li>`).join('')}<li><a href="${here}" aria-current="page">${last}</a></li></ol></nav>`;
+};
 
 const cta = (sector) => `
 <section class="cta"><div class="wrap">
@@ -64,8 +75,10 @@ const cta = (sector) => `
 </div></section>`;
 
 const hero = ({ crumb, h1, lead, img, buttons = '', eyebrow = '', small = true }) => `
-<section class="hero img ${small ? 'small' : ''}" style="--bg:url(${IMG}${img})"><div class="wrap">
-  ${crumb ? `<div class="crumb"><a href="#/">Inicio</a> / ${crumb}</div>` : ''}
+<section class="hero img ${small ? 'small' : ''}">
+  <picture class="hero-bg"><source type="image/webp" srcset="${IMG}${img.replace(/\.jpg$/, '.webp')}"><img src="${IMG}${img}" alt=""${dim(img)} fetchpriority="high"></picture>
+  <div class="wrap">
+  ${crumbs(crumb)}
   ${eyebrow ? `<span class="eyebrow light">${eyebrow}</span>` : ''}
   <h1>${h1}</h1>${lead ? `<p>${lead}</p>` : ''}
   ${buttons ? `<div class="hero-cta">${buttons}</div>` : ''}
@@ -149,7 +162,7 @@ ${cta('farma')}`,
 <section><div class="wrap">
   <div class="head"><span class="eyebrow">Nuestro proceso</span><h2>De origen a tienda</h2>
   <p class="lead">Amplia experiencia de servicio a grandes almacenes y liquidadores. Contamos con almacén aduanero público y privado que facilita la gestión internacional del stock de nuestros clientes.</p></div>
-  <img class="diagram" src="${IMG}moda-ciclo.jpg" alt="Ciclo del transporte internacional de moda" loading="lazy">
+  <img class="diagram" src="${IMG}moda-ciclo.jpg" alt="Ciclo del transporte internacional de moda"${dim('moda-ciclo.jpg')} loading="lazy">
   <div class="grid g3" style="margin-top:36px">${[
     ['E-commerce', 'Nos ocupamos de toda la logística que necesita para su tienda online. Manejamos sus pedidos, empaquetamos y los enviamos a sus clientes de acuerdo con sus criterios.'],
     ['Manipulado de prendas', 'Realizamos cualquier operación para que la prenda esté lista para su entrega en la tienda. Colocamos botones, hacemos ojales, plancha (manual, automático), cosemos etiquetas, conectamos alarmas, bolsos y doblamos la ropa.'],
@@ -207,7 +220,7 @@ const views = {
     <p>El operador logístico de referencia en cualquier sector que necesite un servicio exigente.</p>
     <div class="hero-cta"><a class="btn btn-red" href="#/cotizar">Solicitar cotización</a><a class="btn btn-ghost" href="#/sectores">Ver mi sector</a></div>
   </div>
-  ${routeMap()}
+  <div class="map-wrap">${routeMap()}<button type="button" class="map-pause" hidden>Pausar animación</button></div>
 </div></section>` + strip([['GDP', 'Certificación farma'], ['ISO 9001:2015', 'Garantía de calidad'], ['+515 oficinas', 'en 187 países'], ['Desde 2003', 'Barcelona · Madrid']]) + `
 <section><div class="wrap">
   <div class="head"><span class="eyebrow">Sectores</span><h2>Especialistas por sector</h2>
@@ -362,10 +375,10 @@ ${figures()}
       <div class="fgrid">
         <div><label for="nombre">Nombre *</label><input id="nombre" name="nombre" autocomplete="name" required></div>
         <div><label for="empresa">Empresa *</label><input id="empresa" name="empresa" autocomplete="organization" required></div>
-        <div><label for="email">Email *</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+        <div><label for="email">Email *</label><input id="email" name="email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" required></div>
         <div><label for="tel">Teléfono</label><input id="tel" name="tel" type="tel" autocomplete="tel"></div>
         <div class="full"><label for="nota">Mensaje</label><textarea id="nota" name="nota" rows="3"></textarea></div>
-        <label class="full consent"><input type="checkbox" id="priv" required><span>He leído y acepto la Política de Privacidad *</span></label>
+        <label class="full consent"><input type="checkbox" id="priv" name="priv" required><span>He leído y acepto la Política de Privacidad *</span></label>
       </div>
       <div class="err" id="err2" role="alert"></div>
       <div class="actions"><button type="button" class="btn btn-line" id="back">Atrás</button><button type="submit" class="btn btn-red">Enviar</button></div>
@@ -400,9 +413,9 @@ function initQuote(params) {
   const show = (n) => {
     f.querySelectorAll('[data-step]').forEach(s => s.hidden = s.dataset.step != n);
     f.querySelectorAll('[data-p]').forEach(p => { p.classList.toggle('on', +p.dataset.p <= n); p.toggleAttribute('aria-current', +p.dataset.p === n); });
-    window.scrollTo({ top: f.getBoundingClientRect().top + scrollY - 110 });
     const first = f.querySelector(`[data-step="${n}"] input:not([type=radio]), [data-step="${n}"] h2`);
-    if (n > 1 && first) { first.tabIndex = first.tabIndex || -1; first.focus({ preventScroll: true }); }
+    if (n > 1 && first) { if (first.matches('h2')) first.tabIndex = -1; first.focus(); }
+    window.scrollTo({ top: f.getBoundingClientRect().top + scrollY - 110 });
   };
   const cond = () => {
     const v = f.sector.value;
@@ -423,7 +436,11 @@ function initQuote(params) {
     if (e) bad ? e.textContent = MSG[i.id] || 'Campo obligatorio' : e.remove();
   };
   const missing = (step) => [...f.querySelectorAll(`[data-step="${step}"] [required]`)].filter(i => { const bad = !i.checkValidity(); mark(i, bad); return bad; });
-  f.querySelectorAll('[required]').forEach(i => i.addEventListener('input', () => { if (i.classList.contains('invalid') && i.checkValidity()) mark(i, false); }));
+  // Al escribir solo se limpian errores; al salir de un campo ya editado se valida.
+  f.querySelectorAll('[required]').forEach(i => {
+    i.addEventListener('input', () => { i.dataset.edited = '1'; if (i.classList.contains('invalid') && i.checkValidity()) mark(i, false); });
+    i.addEventListener('blur', () => { if (i.dataset.edited) mark(i, !i.checkValidity()); });
+  });
   document.getElementById('next').onclick = () => {
     const m = missing(1);
     if (m.length) { document.getElementById('err1').textContent = `Faltan ${m.length} campo(s) obligatorio(s).`; m[0].focus(); return; }
@@ -436,10 +453,10 @@ function initQuote(params) {
     if (m.length) { document.getElementById('err2').textContent = `Revise ${m.length} campo(s) marcado(s).`; m[0].focus(); return; }
     const d = new FormData(f);
     const rows = [['Sector', SECTORS[d.get('sector')]?.name || (d.get('sector') ? 'Otro' : '')], ['Servicio', d.get('modo')], ['Mercancía', d.get('merc')], ['Peso / volumen', [d.get('peso') && d.get('peso') + ' kg', d.get('vol') && d.get('vol') + ' m³'].filter(Boolean).join(' · ')], ['Contacto', `${d.get('nombre')} · ${d.get('empresa')}`]];
-    const box = document.getElementById('summary'); box.innerHTML = '';
+    const box = document.getElementById('summary'); box.replaceChildren();
     rows.filter(r => r[1]).forEach(r => { const div = document.createElement('div'); const a = document.createElement('span'); const b = document.createElement('b'); a.textContent = r[0]; b.textContent = r[1]; div.append(a, b); box.append(div); });
     document.getElementById('ref').textContent = 'GM-' + Date.now().toString().slice(-6);
-    const lr = document.getElementById('lroute'); lr.innerHTML = '';
+    const lr = document.getElementById('lroute'); lr.replaceChildren();
     [d.get('origen'), '→', d.get('destino')].forEach((t, i) => { const e = document.createElement(i === 1 ? 'i' : 'span'); e.textContent = t; lr.append(e); });
     show(3);
   };
@@ -456,6 +473,7 @@ function route() {
   const h1 = document.querySelector('#app h1');
   document.title = (name === 'home' ? 'Logística integral para mercancía de valor añadido' : h1.textContent) + ' · GRUP MET';
   setMenu(false);
+  closeSubs();
   window.scrollTo(0, 0);
   if (!first) document.getElementById('app').focus({ preventScroll: true });
   first = false;
@@ -471,18 +489,32 @@ function setMenu(open) {
   document.body.classList.toggle('menu-open', open);
   burger.setAttribute('aria-expanded', open);
   burger.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+  // Con el panel abierto, el contenido que queda tapado sale del foco y del lector de pantalla.
+  document.querySelectorAll('main, .footer').forEach(el => { el.inert = open; });
 }
 burger.addEventListener('click', () => setMenu(burger.getAttribute('aria-expanded') !== 'true'));
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
   if (burger.getAttribute('aria-expanded') === 'true') { setMenu(false); burger.focus(); }
-  const item = document.activeElement.closest('.nav-item');
-  if (item) { item.classList.add('closed'); item.querySelector('.nav-link').focus(); }
 });
-document.querySelectorAll('.nav-item').forEach(i => {
-  i.addEventListener('mouseleave', () => i.classList.remove('closed'));
-  i.addEventListener('focusout', (e) => { if (!i.contains(e.relatedTarget)) i.classList.remove('closed'); });
+
+// Submenú: el enlace navega, el botón contiguo abre y cierra. No se abre al recibir foco de teclado.
+const subs = [...document.querySelectorAll('.nav-item.has-sub')].map((item) => {
+  const btn = item.querySelector('.sub-toggle');
+  let preview = false;
+  const set = (open) => { item.classList.toggle('open', open); btn.setAttribute('aria-expanded', open); if (!open) preview = false; };
+  btn.addEventListener('click', () => { if (preview) { preview = false; return; } set(!item.classList.contains('open')); });
+  item.addEventListener('pointerenter', (e) => {
+    if (e.pointerType === 'touch' || !matchMedia('(hover: hover) and (min-width: 901px)').matches || item.classList.contains('open')) return;
+    set(true); preview = true;
+  });
+  item.addEventListener('pointerleave', () => { if (preview) set(false); });
+  item.addEventListener('focusout', (e) => { if (e.relatedTarget && !item.contains(e.relatedTarget)) set(false); });
+  item.addEventListener('keydown', (e) => { if (e.key === 'Escape' && item.classList.contains('open')) { e.stopPropagation(); set(false); btn.focus(); } });
+  document.addEventListener('click', (e) => { if (!item.contains(e.target)) set(false); });
+  return set;
 });
+function closeSubs() { subs.forEach((set) => set(false)); }
 document.getElementById('nav').addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
 matchMedia('(min-width:901px)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
 addEventListener('scroll', () => header.classList.toggle('scrolled', scrollY > 80), { passive: true });

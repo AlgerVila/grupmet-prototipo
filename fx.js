@@ -68,11 +68,12 @@ function pageIndex() {
   const nav = document.createElement('nav');
   nav.className = 'pindex'; nav.setAttribute('aria-label', 'En esta página');
   const links = secs.map((sec, i) => {
-    const a = document.createElement('a'); a.href = '#';
+    sec.id ||= 'sec-' + (i + 1); sec.tabIndex = -1;
+    const a = document.createElement('a'); a.href = '#' + sec.id;
     const t = document.createElement('span'); t.className = 'pi-t'; t.textContent = sec.querySelector('.eyebrow').textContent.trim();
     const n = document.createElement('span'); n.className = 'pi-n'; n.textContent = String(i + 1).padStart(2, '0');
     a.append(t, n);
-    a.addEventListener('click', (e) => { e.preventDefault(); window.scrollTo({ top: sec.getBoundingClientRect().top + scrollY - header.offsetHeight + 1 }); });
+    a.addEventListener('click', (e) => { e.preventDefault(); window.scrollTo({ top: sec.getBoundingClientRect().top + scrollY - header.offsetHeight + 1 }); sec.focus({ preventScroll: true }); });
     nav.append(a);
     return a;
   });
@@ -89,8 +90,21 @@ function pageIndex() {
 addEventListener('scroll', () => document.querySelector('.pindex')?._sync(), { passive: true });
 addEventListener('resize', () => document.querySelector('.pindex')?._sync(), { passive: true });
 
+// Control visible para detener el movimiento continuo del mapa (WCAG 2.2.2).
+function mapPause() {
+  const btn = document.querySelector('#app .map-pause'), svg = document.querySelector('#app .routemap');
+  if (!btn || !svg || REDUCED) return;
+  btn.hidden = false;
+  btn.addEventListener('click', () => {
+    const paused = svg.classList.toggle('paused');
+    paused ? svg.pauseAnimations() : svg.unpauseAnimations();
+    btn.textContent = paused ? 'Reanudar animación' : 'Pausar animación';
+  });
+}
+
 function initFx() {
   pageIndex();
+  mapPause();
   const io = new IntersectionObserver((entries) => entries.forEach((e) => {
     if (!e.isIntersecting) return;
     io.unobserve(e.target);
