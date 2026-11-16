@@ -289,3 +289,74 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--red);outline-off
 .logos img{display:block;height:88px;width:auto;max-width:none;max-height:none;mix-blend-mode:multiply;filter:grayscale(1);opacity:.8;transition:filter .2s,opacity .2s}
 .logos div:hover img{filter:none;opacity:1}
 @media (max-width:900px){.logos{justify-content:center;gap:12px 28px}.logos img{height:70px}}
+
+/* ---------- Hero portada con mapa de rutas ---------- */
+.hero.home{padding:64px 0 56px}
+.hero.home:before{background:radial-gradient(circle at 70% 35%,rgba(173,31,48,.22),transparent 55%)}
+.hero-grid{display:grid;grid-template-columns:5fr 7fr;gap:32px;align-items:center}
+.hero.home h1{font-size:clamp(2rem,3.6vw,3rem)}
+.routemap{display:block;width:100%;height:auto;overflow:visible}
+.routemap .dots{fill:none;stroke:#5a6069;stroke-width:3.4;stroke-linecap:round}
+.routemap .arc{fill:none;stroke:#ff5a6e;stroke-width:1.6;stroke-dasharray:1;stroke-dashoffset:1;opacity:.85;animation:draw 1.4s cubic-bezier(.4,0,.2,1) forwards;animation-delay:calc(.3s + var(--i)*.18s)}
+.routemap .dest circle{fill:#0c0d0f;stroke:#ff5a6e;stroke-width:2}
+.routemap .dest text,.routemap .origin text{fill:#fff;font:700 15px "Roboto Condensed",sans-serif;letter-spacing:.1em}
+.routemap .dest{opacity:0;animation:fade .5s forwards;animation-delay:calc(1.3s + var(--i)*.18s)}
+.routemap .mover{fill:#fff}
+.routemap .origin circle{fill:var(--red);stroke:#fff;stroke-width:2}
+.routemap .origin .pulse,.prox .pulse{fill:none;stroke:#ff5a6e;stroke-width:2;transform-box:fill-box;transform-origin:center;animation:pulse 2.6s ease-out infinite}
+.routemap .origin text{font-size:17px}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fade{to{opacity:1}}
+@keyframes pulse{0%{transform:scale(1);opacity:.9}100%{transform:scale(3.4);opacity:0}}
+
+/* ---------- Contadores ---------- */
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- Esquema de proximidad ---------- */
+.prox{margin:0;background:#fff;border:1px solid var(--g2)}
+.prox svg{display:block;width:100%;height:auto}
+.prox figcaption{font-size:.85rem;color:var(--mute);padding:10px 16px;border-top:1px solid var(--g2)}
+.prox .sea{fill:#eef1f4}
+.prox .coast{fill:none;stroke:#b9bfc7;stroke-width:2;stroke-linejoin:round}
+.prox .sea-t{fill:#8a929c;font:italic 400 13px "Roboto Condensed",sans-serif;letter-spacing:.08em}
+.prox .city{fill:#9aa0a8;font:600 13px "Roboto Condensed",sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.prox .link{fill:none;stroke:var(--red);stroke-width:2.5;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1s cubic-bezier(.4,0,.2,1) var(--d,0s)}
+.prox.in .link{stroke-dashoffset:0}
+.prox .km{opacity:0;transition:opacity .4s var(--d,0s)}
+.prox.in .km{opacity:1}
+.prox .km rect{fill:var(--red)}
+.prox .km text{fill:#fff;font:700 13px "Roboto Condensed",sans-serif;text-anchor:middle;letter-spacing:.04em}
+.prox .node circle{fill:#fff;stroke:var(--ink);stroke-width:2.5}
+.prox .node text{fill:var(--ink);font:600 14px "Roboto Condensed",sans-serif}
+.prox .node.sec circle{stroke:#9aa0a8}.prox .node.sec text{fill:var(--mute);font-weight:400}
+.prox .node.main circle{fill:var(--red);stroke:#fff}
+.prox .node.main .pulse{fill:none;stroke:var(--red)}
+.prox .node.main text{fill:#000;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.prox .node.main .sub-t{font-size:13px;font-weight:400;fill:var(--mute);text-transform:none;letter-spacing:0}
+.prox-row{align-items:start!important;gap:24px!important}
+.wh-mini{gap:16px!important;align-items:stretch!important}
+.wh-mini .body{padding:16px}.wh-mini h3{font-size:1rem}.wh-mini p{font-size:.9rem;margin:0}
+
+/* ---------- Lenguaje de etiqueta de envío ---------- */
+.code{display:inline-block;font-weight:700;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;padding:4px 9px;background:#000;color:#fff;border-left:3px solid var(--red)}
+.code.solid{margin-bottom:12px}
+.thumb-wrap{position:relative}
+.thumb-wrap .code{position:absolute;left:0;bottom:0}
+.label{text-align:left;border:2px solid #000;margin:24px 0;background:#fff}
+.label-top{display:flex;justify-content:space-between;gap:12px;align-items:center;background:#000;color:#fff;padding:9px 16px;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase}
+.label-top b{font-size:1rem;letter-spacing:.1em;font-variant-numeric:tabular-nums}
+.label-route{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:18px 16px 14px;font-size:1.7rem;font-weight:700;text-transform:uppercase;line-height:1.1;color:#000;border-bottom:2px solid #000}
+.label-route i{font-style:normal;color:var(--red)}
+.label .summary{margin:0;background:none;padding:10px 16px}
+.barcode{height:44px;margin:6px 16px 14px;background:repeating-linear-gradient(90deg,#000 0 2px,transparent 2px 5px,#000 5px 6px,transparent 6px 10px,#000 10px 13px,transparent 13px 15px,#000 15px 16px,transparent 16px 21px)}
+
+@media (max-width:900px){
+  .hero-grid{grid-template-columns:1fr;gap:28px}
+  .routemap .dest text,.routemap .origin text{font-size:22px}
+  .label-route{font-size:1.3rem}
+}
+@media (prefers-reduced-motion:reduce){
+  .routemap .arc{animation:none;stroke-dashoffset:0}.routemap .dest{animation:none;opacity:1}
+  .routemap .pulse,.prox .pulse{animation:none;opacity:0}
+  .prox .link{transition:none;stroke-dashoffset:0}.prox .km{transition:none;opacity:1}
+}

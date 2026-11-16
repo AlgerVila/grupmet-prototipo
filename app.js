@@ -6,19 +6,19 @@ const CONNECT_URL = 'https://grupmet.deiworld.es/csp/deiwcsp/deiw060001/WNDNewGr
 
 const SECTORS = {
   farma: {
-    name: 'Farma y salud', short: 'farma', img: 'home-farma.jpg', alt: 'Sala de manipulado farmacéutico de GRUP MET',
+    name: 'Farma y salud', short: 'farma', code: 'Temp. controlada · 24/7', img: 'home-farma.jpg', alt: 'Sala de manipulado farmacéutico de GRUP MET',
     title: 'Especialistas en la industria farma y de la salud',
     card: 'Distribución de medicamentos y productos farmacéuticos para multinacionales alrededor de todo el mundo gracias a la certificación GDP.',
     facts: [['8.000 m²', 'al servicio de farma y salud'], ['24h × 7 días', 'almacén PMP en temperatura controlada']],
   },
   moda: {
-    name: 'Moda y textil', short: 'moda', img: 'banner-moda.jpg', alt: 'Desfile de moda',
+    name: 'Moda y textil', short: 'moda', code: 'Origen → tienda', img: 'banner-moda.jpg', alt: 'Desfile de moda',
     title: 'Servicios exclusivos para la industria de la moda',
     card: 'Hemos apostado fuertemente por la industria textil, con servicios a lo largo de toda la cadena de suministros.',
     facts: [['+50 millones', 'de prendas manipuladas'], ['+100.000', 'prendas al día']],
   },
   editorial: {
-    name: 'Editorial', short: 'editorial', img: 'home-editorial.jpg', alt: 'Estanterías de libros',
+    name: 'Editorial', short: 'editorial', code: 'BCN → América', img: 'home-editorial.jpg', alt: 'Estanterías de libros',
     title: 'Expertos en el transporte para el sector editorial',
     card: 'Nuestro profundo conocimiento y experiencia en el sector nos permite ofrecer siempre la mejor solución para nuestros clientes.',
     facts: [['+30 años', 'de experiencia acumulada'], ['América', 'por vía marítima y aérea']],
@@ -75,7 +75,7 @@ const strip = (facts) => `<section class="trust"><div class="wrap trust-grid">${
 
 const sectorCards = () => Object.entries(SECTORS).map(([k, s]) => `
   <a class="card" href="#/sector/${k}">
-    ${photo(s.img, s.alt, 'thumb')}
+    <div class="thumb-wrap">${photo(s.img, s.alt, 'thumb')}<span class="code">${s.code}</span></div>
     <div class="body">
       <h3>${s.name}</h3><p>${s.card}</p>
       <ul>${s.facts.map(f => `<li><b>${f[0]}</b> ${f[1]}</li>`).join('')}</ul>
@@ -88,7 +88,7 @@ const serviceGrid = (cols) => `<div class="grid ${cols}">${SERVICES.map(s => `<d
 const figures = () => `
 <section class="bg-dark"><div class="wrap">
   <div class="head"><span class="eyebrow light">GRUP MET en datos</span><h2>Cifras que nos avalan</h2></div>
-  <div class="grid g4">${FIGURES.map(f => `<div class="stat"><div class="num">+${f[0]}</div><span>${f[1]}</span></div>`).join('')}</div>
+  <div class="grid g4">${FIGURES.map(f => `<div class="stat"><div class="num" data-count="${f[0].replace(/\./g, '')}">+${f[0]}</div><span>${f[1]}</span></div>`).join('')}</div>
 </div></section>`;
 
 const clients = (bg = '') => `
@@ -103,9 +103,9 @@ const warehouses = () => `<div class="grid g4">${WAREHOUSES.map(w => `<div class
 
 const offices = () => `
 <div class="grid g3">
-  <div class="office"><h3>Headquarter Office</h3><p>Calle Agricultura 16-18<br>El Masnou (Barcelona)</p><p><a class="link" href="tel:+34935405318">+34 935 405 318</a></p></div>
-  <div class="office"><h3>MAD Office</h3><p>Calle Quebec 8<br>Barajas (Madrid)</p></div>
-  <div class="office"><h3>BCN Airport Office</h3><p>Carrer Felip Sandino 20<br>El Prat de Llobregat (Barcelona)</p></div>
+  <div class="office"><span class="code solid">BCN · HQ</span><h3>Headquarter Office</h3><p>Calle Agricultura 16-18<br>El Masnou (Barcelona)</p><p><a class="link" href="tel:+34935405318">+34 935 405 318</a></p></div>
+  <div class="office"><span class="code solid">MAD</span><h3>MAD Office</h3><p>Calle Quebec 8<br>Barajas (Madrid)</p></div>
+  <div class="office"><span class="code solid">BCN · APT</span><h3>BCN Airport Office</h3><p>Carrer Felip Sandino 20<br>El Prat de Llobregat (Barcelona)</p></div>
 </div>`;
 
 const sectorViews = {
@@ -162,7 +162,7 @@ ${cta('farma')}`,
 <section class="bg-g" id="moda-instalaciones"><div class="wrap">
   <div class="head"><span class="eyebrow">Nuestras instalaciones</span><h2>24.000 m² ubicados estratégicamente</h2>
   <p class="lead">Al servicio de la industria textil y de la moda. A 18 km del Puerto de Barcelona y a 8 km del Aeropuerto del Prat.</p></div>
-  ${warehouses()}
+  <div class="grid g2 prox-row">${proximity()}<div class="grid g2 wh-mini">${WAREHOUSES.map(w => `<div class="card">${photo(w[0], w[1], 'thumb')}<div class="body"><h3>${w[1]}</h3><p>${w[2]}</p></div></div>`).join('')}</div></div>
 </div></section>
 <section><div class="wrap grid g2">
   ${photo('moda-brazo.jpg', 'Terminal de radiofrecuencia de muñeca', 'contain')}
@@ -199,12 +199,16 @@ ${cta('editorial')}`,
 };
 
 const views = {
-  home: () => hero({
-    small: false, img: 'banner-servicios.jpg', eyebrow: 'Transporte y logística internacional · desde 2003',
-    h1: 'Logística integral para mercancía de <em>valor añadido</em>',
-    lead: 'El operador logístico de referencia en cualquier sector que necesite un servicio exigente.',
-    buttons: '<a class="btn btn-red" href="#/cotizar">Solicitar cotización</a><a class="btn btn-ghost" href="#/sectores">Ver mi sector</a>',
-  }) + strip([['GDP', 'Certificación farma'], ['ISO 9001:2015', 'Garantía de calidad'], ['+515 oficinas', 'en 187 países'], ['Desde 2003', 'Barcelona · Madrid']]) + `
+  home: () => `
+<section class="hero home"><div class="wrap hero-grid">
+  <div>
+    <span class="eyebrow light">Transporte y logística internacional · desde 2003</span>
+    <h1>Logística integral para mercancía de <em>valor añadido</em></h1>
+    <p>El operador logístico de referencia en cualquier sector que necesite un servicio exigente.</p>
+    <div class="hero-cta"><a class="btn btn-red" href="#/cotizar">Solicitar cotización</a><a class="btn btn-ghost" href="#/sectores">Ver mi sector</a></div>
+  </div>
+  ${routeMap()}
+</div></section>` + strip([['GDP', 'Certificación farma'], ['ISO 9001:2015', 'Garantía de calidad'], ['+515 oficinas', 'en 187 países'], ['Desde 2003', 'Barcelona · Madrid']]) + `
 <section><div class="wrap">
   <div class="head"><span class="eyebrow">Sectores</span><h2>Especialistas por sector</h2>
   <p class="lead">Nuestro proyecto está muy enfocado en la industria de la salud, textil y de la moda, ofreciendo a nuestros clientes muchos servicios a lo largo de la cadena de suministro.</p></div>
@@ -262,17 +266,23 @@ ${cta()}`,
 <section><div class="wrap"><h2 class="sr">Nuestros servicios</h2>${serviceGrid('g4')}</div></section>${figures()}${cta()}`,
 
   instalaciones: () => hero({ crumb: 'Instalaciones', img: 'farma-02.jpg', h1: 'Nuestras instalaciones', lead: '24.000 m² para textil y moda y 8.000 m² para farma y salud, ubicados estratégicamente junto al Puerto de Barcelona y al Aeropuerto del Prat.' }) + `
-<section><div class="wrap">
+<section><div class="wrap grid g2">
+  <div><span class="eyebrow">Ubicación</span><h2>Entre el puerto y el aeropuerto</h2>
+  <p class="lead">Instalaciones ubicadas estratégicamente en el área de Barcelona.</p>
+  <ul class="check"><li><b>8 km</b> del Aeropuerto del Prat</li><li><b>18 km</b> del Puerto de Barcelona</li><li>Almacén aduanero público y privado</li><li>Farma y salud: a menos de 30 km de puerto y aeropuerto</li></ul></div>
+  ${proximity()}
+</div></section>
+<section class="bg-g"><div class="wrap">
   <div class="head"><span class="eyebrow">Moda y textil</span><h2>24.000 m² · cuatro almacenes</h2>
   <p class="lead">A 18 km del Puerto de Barcelona y a 8 km del Aeropuerto del Prat. Almacén aduanero público y privado.</p></div>
   ${warehouses()}
 </div></section>
-<section class="bg-g"><div class="wrap">
+<section><div class="wrap">
   <div class="head"><span class="eyebrow">Farma y salud</span><h2>8.000 m² · sala blanca</h2>
   <p class="lead">Recepción de materias primas, manipulación o fabricación de productos, almacenaje y distribución de los productos acabados. Almacén PMP propio en temperatura controlada 24h × 7 días. A menos de 30 km del Puerto de Barcelona y del Aeropuerto del Prat.</p></div>
   <div class="gallery">${[['farma-36.jpg', 'Sala de manipulado'], ['farma-30.jpg', 'Operaria en línea de encajado'], ['farma-02.jpg', 'Almacén con estanterías de palets']].map(g => photo(g[0], g[1])).join('')}</div>
 </div></section>
-<section><div class="wrap"><div class="head"><span class="eyebrow">Oficinas</span><h2>Dónde estamos</h2></div>${offices()}</div></section>${cta()}`,
+<section class="bg-g"><div class="wrap"><div class="head"><span class="eyebrow">Oficinas</span><h2>Dónde estamos</h2></div>${offices()}</div></section>${cta()}`,
 
   nosotros: () => hero({ crumb: 'Nosotros', img: 'banner-nosotros.jpg', h1: 'Hacemos fácil la logística internacional', lead: 'Una filosofía de trabajo basada en la transparencia, la anticipación y el ofrecer un servicio de calidad.' }) + `
 <section><div class="wrap grid g2" style="align-items:start">
@@ -365,8 +375,12 @@ ${figures()}
       <div class="done">
         <div class="ok"></div>
         <h2>Solicitud recibida</h2>
-        <p>Referencia <b id="ref"></b>.</p>
-        <div class="summary" id="summary"></div>
+        <div class="label">
+          <div class="label-top"><span>GRUP MET · Solicitud de cotización</span><b id="ref"></b></div>
+          <div class="label-route" id="lroute"></div>
+          <div class="summary" id="summary"></div>
+          <div class="barcode" aria-hidden="true"></div>
+        </div>
         <a class="btn btn-line" href="#/">Volver al inicio</a>
       </div>
     </div>
@@ -421,10 +435,12 @@ function initQuote(params) {
     const m = missing(2);
     if (m.length) { document.getElementById('err2').textContent = `Revise ${m.length} campo(s) marcado(s).`; m[0].focus(); return; }
     const d = new FormData(f);
-    const rows = [['Sector', SECTORS[d.get('sector')]?.name || (d.get('sector') ? 'Otro' : '')], ['Modo', d.get('modo')], ['Ruta', `${d.get('origen')} → ${d.get('destino')}`], ['Mercancía', d.get('merc')], ['Peso / volumen', [d.get('peso') && d.get('peso') + ' kg', d.get('vol') && d.get('vol') + ' m³'].filter(Boolean).join(' · ')], ['Contacto', `${d.get('nombre')} · ${d.get('empresa')}`]];
+    const rows = [['Sector', SECTORS[d.get('sector')]?.name || (d.get('sector') ? 'Otro' : '')], ['Servicio', d.get('modo')], ['Mercancía', d.get('merc')], ['Peso / volumen', [d.get('peso') && d.get('peso') + ' kg', d.get('vol') && d.get('vol') + ' m³'].filter(Boolean).join(' · ')], ['Contacto', `${d.get('nombre')} · ${d.get('empresa')}`]];
     const box = document.getElementById('summary'); box.innerHTML = '';
     rows.filter(r => r[1]).forEach(r => { const div = document.createElement('div'); const a = document.createElement('span'); const b = document.createElement('b'); a.textContent = r[0]; b.textContent = r[1]; div.append(a, b); box.append(div); });
     document.getElementById('ref').textContent = 'GM-' + Date.now().toString().slice(-6);
+    const lr = document.getElementById('lroute'); lr.innerHTML = '';
+    [d.get('origen'), '→', d.get('destino')].forEach((t, i) => { const e = document.createElement(i === 1 ? 'i' : 'span'); e.textContent = t; lr.append(e); });
     show(3);
   };
 }
@@ -444,6 +460,7 @@ function route() {
   if (!first) document.getElementById('app').focus({ preventScroll: true });
   first = false;
   if (name === 'cotizar') initQuote(new URLSearchParams(qs || ''));
+  initFx();
 }
 
 const header = document.querySelector('.header');
