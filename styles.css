@@ -360,3 +360,18 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--red);outline-off
   .routemap .pulse,.prox .pulse{animation:none;opacity:0}
   .prox .link{transition:none;stroke-dashoffset:0}.prox .km{transition:none;opacity:1}
 }
+
+/* ---------- Índice lateral de secciones ---------- */
+.pindex{display:none}
+@media (min-width:1260px){
+  .pindex{position:fixed;right:10px;top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
+  .pindex.show{opacity:1;pointer-events:auto}
+  .pindex a{position:relative;display:flex;align-items:center;justify-content:flex-end;height:24px;width:40px}
+  .pi-k{display:block;width:14px;height:2px;background:#9aa0a8;transition:width .2s,background .2s}
+  .pindex a.on .pi-k{width:26px;height:3px;background:var(--red)}
+  .pindex a:hover .pi-k{background:var(--red)}
+  .pi-t{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;background:#000;color:#fff;padding:3px 8px;border-left:3px solid var(--red);position:absolute;right:46px;top:50%;opacity:0;transform:translate(6px,-50%);transition:opacity .15s,transform .15s;pointer-events:none}
+  .pindex:hover .pi-t,.pindex:focus-within .pi-t{opacity:1;transform:translate(0,-50%)}
+  .pindex:hover a:not(.on):not(:hover) .pi-t{background:#33373d;border-left-color:#6b7078}
+}
+@media (min-width:1560px){.pindex{right:24px}.pindex a.on .pi-t{opacity:1;transform:translate(0,-50%)}}

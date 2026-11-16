@@ -21,7 +21,11 @@ function routeMap() {
     arcs += `<path id="arc${i}" class="arc" style="--i:${i}" pathLength="1" d="${path}"/>`;
     const tx = side === 'l' ? x - 9 : x + 9;
     pts += `<g class="dest" style="--i:${i}"><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4"/><text x="${tx.toFixed(1)}" y="${(y + 4).toFixed(1)}" text-anchor="${side === 'l' ? 'end' : 'start'}">${code}</text></g>`;
-    if (!REDUCED) movers += `<circle class="mover" r="3.2" opacity="0"><set attributeName="opacity" to="1" begin="${(1.6 + i * 0.7).toFixed(1)}s" fill="freeze"/><animateMotion dur="${(4.5 + d / 160).toFixed(1)}s" begin="${(1.6 + i * 0.7).toFixed(1)}s" repeatCount="indefinite" calcMode="spline" keyTimes="0;1" keySplines="0.4 0 0.6 1"><mpath href="#arc${i}"/></animateMotion></circle>`;
+    if (!REDUCED) {
+      const t0 = (1.6 + i * 0.7).toFixed(1), dur = (9 + d / 80).toFixed(1);
+      // Ida y vuelta: 0 → 1 → 0 sobre el mismo arco, con pausa breve en cada extremo.
+      movers += `<circle class="mover" r="3.2" opacity="0"><set attributeName="opacity" to="1" begin="${t0}s" fill="freeze"/><animateMotion dur="${dur}s" begin="${t0}s" repeatCount="indefinite" calcMode="spline" keyPoints="0;1;1;0;0" keyTimes="0;0.46;0.5;0.96;1" keySplines="0.4 0 0.6 1;0 0 1 1;0.4 0 0.6 1;0 0 1 1"><mpath href="#arc${i}"/></animateMotion></circle>`;
+    }
   });
   return `<svg class="routemap" viewBox="${X0} 0 ${W} ${MAP.h}" role="img" aria-label="Mapa de rutas desde Barcelona hacia América y Asia">
   <path class="dots" d="${MAP.dots}"/>
@@ -56,7 +60,41 @@ function proximity() {
 </figure>`;
 }
 
+// Índice lateral de secciones: solo escritorio ancho, etiquetas al pasar el ratón.
+let pindexIO = null;
+function pageIndex() {
+  document.querySelector('.pindex')?.remove();
+  pindexIO?.disconnect();
+  const secs = [...document.querySelectorAll('#app > section')].filter((s) => !s.matches('.hero,.trust,.cta') && s.querySelector('.eyebrow'));
+  if (secs.length < 3) return;
+  const nav = document.createElement('nav');
+  nav.className = 'pindex'; nav.setAttribute('aria-label', 'En esta página');
+  secs.forEach((sec, i) => {
+    const a = document.createElement('a');
+    a.href = '#'; a.dataset.i = i;
+    const n = document.createElement('span'); n.className = 'pi-t';
+    n.textContent = String(i + 1).padStart(2, '0') + ' · ' + sec.querySelector('.eyebrow').textContent.trim();
+    const tick = document.createElement('span'); tick.className = 'pi-k'; tick.setAttribute('aria-hidden', 'true');
+    a.append(n, tick);
+    a.addEventListener('click', (e) => { e.preventDefault(); window.scrollTo({ top: sec.getBoundingClientRect().top + scrollY - header.offsetHeight + 1 }); });
+    nav.append(a);
+  });
+  document.body.append(nav);
+  const links = [...nav.children];
+  pindexIO = new IntersectionObserver((entries) => entries.forEach((e) => {
+    if (!e.isIntersecting) return;
+    const i = secs.indexOf(e.target);
+    links.forEach((l, j) => { l.classList.toggle('on', i === j); i === j ? l.setAttribute('aria-current', 'true') : l.removeAttribute('aria-current'); });
+  }), { rootMargin: '-45% 0px -50% 0px' });
+  secs.forEach((s) => pindexIO.observe(s));
+  const first = secs[0], last = secs[secs.length - 1];
+  const vis = () => nav.classList.toggle('show', first.getBoundingClientRect().top < innerHeight * 0.6 && last.getBoundingClientRect().bottom > innerHeight * 0.4);
+  nav._vis = vis; vis();
+}
+addEventListener('scroll', () => document.querySelector('.pindex')?._vis(), { passive: true });
+
 function initFx() {
+  pageIndex();
   const io = new IntersectionObserver((entries) => entries.forEach((e) => {
     if (!e.isIntersecting) return;
     io.unobserve(e.target);
