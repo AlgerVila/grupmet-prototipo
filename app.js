@@ -220,7 +220,7 @@ const views = {
     <p>El operador logístico de referencia en cualquier sector que necesite un servicio exigente.</p>
     <div class="hero-cta"><a class="btn btn-red" href="#/cotizar">Solicitar cotización</a><a class="btn btn-ghost" href="#/sectores">Ver mi sector</a></div>
   </div>
-  <div class="map-wrap">${routeMap()}<button type="button" class="map-pause" hidden>Pausar animación</button></div>
+  <div class="map-wrap">${routeMap()}<button type="button" class="map-pause" aria-label="Pausar animación" title="Pausar animación" hidden></button></div>
 </div></section>` + strip([['GDP', 'Certificación farma'], ['ISO 9001:2015', 'Garantía de calidad'], ['+515 oficinas', 'en 187 países'], ['Desde 2003', 'Barcelona · Madrid']]) + `
 <section><div class="wrap">
   <div class="head"><span class="eyebrow">Sectores</span><h2>Especialistas por sector</h2>

@@ -98,7 +98,8 @@ function mapPause() {
   btn.addEventListener('click', () => {
     const paused = svg.classList.toggle('paused');
     paused ? svg.pauseAnimations() : svg.unpauseAnimations();
-    btn.textContent = paused ? 'Reanudar animación' : 'Pausar animación';
+    const label = paused ? 'Reanudar animación' : 'Pausar animación';
+    btn.classList.toggle('paused', paused); btn.setAttribute('aria-label', label); btn.title = label;
   });
 }
 

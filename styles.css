@@ -313,10 +313,17 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--red);outline-off
 /* Esquema de proximidad: dos pulsos y se detiene (menos de 5 s, no necesita control). */
 .prox .pulse{opacity:0}
 .prox.in .pulse{animation:pulse 2.4s ease-out 2}
-.map-wrap{min-width:0}
-.map-pause{display:block;margin:10px 0 0 auto;background:none;border:1px solid rgba(255,255,255,.4);color:#d9dbde;font:inherit;font-size:.76rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;cursor:pointer}
-.map-pause:hover{border-color:#fff;color:#fff}
+.map-wrap{min-width:0;position:relative}
+/* Pausa del mapa: icono en la esquina. Con ratón aparece al pasar por el mapa; con teclado al enfocarlo; en táctil y en pausa queda visible. */
+.map-pause{position:absolute;right:0;bottom:0;width:34px;height:34px;display:grid;place-items:center;background:rgba(12,13,15,.7);border:1px solid rgba(255,255,255,.45);color:#fff;cursor:pointer;padding:0;transition:opacity .2s,border-color .15s}
+.map-pause::before{content:"";width:4px;height:12px;border-left:4px solid currentColor;border-right:4px solid currentColor;box-sizing:content-box}
+.map-pause.paused::before{width:0;height:0;border:0;border-left:11px solid currentColor;border-top:7px solid transparent;border-bottom:7px solid transparent;margin-left:3px}
+.map-pause:hover{border-color:#fff}
 .map-pause[hidden]{display:none}
+@media (hover:hover){
+  .map-pause{opacity:0}
+  .map-wrap:hover .map-pause,.map-pause:focus-visible,.map-pause.paused{opacity:1}
+}
 .routemap .origin text{font-size:17px}
 @keyframes draw{to{stroke-dashoffset:0}}
 @keyframes fade{to{opacity:1}}
